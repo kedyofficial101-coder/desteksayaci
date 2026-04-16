@@ -1,0 +1,44 @@
+<script>
+const API_URL = "https://api.counterapi.dev/v1/kedyofficial101-coder/desteksayaci";
+
+async function yukle() {
+    try {
+        let res = await fetch(API_URL);
+        let data = await res.json();
+        document.getElementById("sayi").innerText = data.value || 0;
+    } catch (e) {
+        document.getElementById("sayi").innerText = "0";
+    }
+
+    if (localStorage.getItem("tiklandi") === "evet") {
+        document.getElementById("btn").disabled = true;
+        document.getElementById("mesaj").innerText =
+            "Zaten destek oldunuz ❤️";
+    }
+}
+
+async function arttir() {
+    if (localStorage.getItem("tiklandi") === "evet") {
+        return;
+    }
+
+    try {
+        let res = await fetch(API_URL + "/up", {
+            method: "POST"
+        });
+
+        let data = await res.json();
+
+        document.getElementById("sayi").innerText = data.value;
+        localStorage.setItem("tiklandi", "evet");
+
+        document.getElementById("btn").disabled = true;
+        document.getElementById("mesaj").innerText =
+            "Teşekkürler ❤️";
+    } catch (e) {
+        alert("Hata oldu");
+    }
+}
+
+yukle();
+</script>

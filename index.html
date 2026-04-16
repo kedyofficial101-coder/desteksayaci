@@ -1,12 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destek Sayacı</title>
+
+<style>
+body{
+    text-align:center;
+    font-family:Arial;
+    padding:40px;
+}
+h1{
+    font-size:60px;
+}
+button{
+    font-size:24px;
+    padding:10px 20px;
+}
+#mesaj{
+    margin-top:20px;
+    font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<h1 id="sayi">0</h1>
+<button id="btn" onclick="arttir()">Destek Ol ❤️</button>
+<p id="mesaj"></p>
+
 <script>
-function yukle() {
-    let sayi = localStorage.getItem("destekSayi");
+const API_URL = "https://api.counterapi.dev/v1/kedyofficial101-coder/desteksayaci";
 
-    if (sayi === null) {
-        sayi = 0;
+async function yukle() {
+    try {
+        let res = await fetch(API_URL);
+        let data = await res.json();
+
+        document.getElementById("sayi").innerText = data.value ?? 0;
+    } catch (e) {
+        document.getElementById("sayi").innerText = "0";
     }
-
-    document.getElementById("sayi").innerText = sayi;
 
     if (localStorage.getItem("tiklandi") === "evet") {
         document.getElementById("btn").disabled = true;
@@ -14,26 +49,28 @@ function yukle() {
     }
 }
 
-function arttir() {
-    if (localStorage.getItem("tiklandi") === "evet") {
-        return;
+async function arttir() {
+    if (localStorage.getItem("tiklandi") === "evet") return;
+
+    try {
+        let res = await fetch(API_URL + "/up", {
+            method: "POST"
+        });
+
+        let data = await res.json();
+
+        document.getElementById("sayi").innerText = data.value;
+        localStorage.setItem("tiklandi", "evet");
+
+        document.getElementById("btn").disabled = true;
+        document.getElementById("mesaj").innerText = "Teşekkürler ❤️";
+    } catch (e) {
+        alert("Sayaç hatası");
     }
-
-    let sayi = localStorage.getItem("destekSayi");
-
-    if (sayi === null) {
-        sayi = 0;
-    }
-
-    sayi = Number(sayi) + 1;
-
-    localStorage.setItem("destekSayi", sayi);
-    localStorage.setItem("tiklandi", "evet");
-
-    document.getElementById("sayi").innerText = sayi;
-    document.getElementById("btn").disabled = true;
-    document.getElementById("mesaj").innerText = "Teşekkürler ❤️";
 }
 
 window.onload = yukle;
 </script>
+
+</body>
+</html>

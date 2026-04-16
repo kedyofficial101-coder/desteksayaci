@@ -1,84 +1,39 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destek Sayacı</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            padding: 40px;
-        }
+<script>
+function yukle() {
+    let sayi = localStorage.getItem("destekSayi");
 
-        h1 {
-            font-size: 50px;
-        }
+    if (sayi === null) {
+        sayi = 0;
+    }
 
-        button {
-            font-size: 20px;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
+    document.getElementById("sayi").innerText = sayi;
 
-        #mesaj {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
+    if (localStorage.getItem("tiklandi") === "evet") {
+        document.getElementById("btn").disabled = true;
+        document.getElementById("mesaj").innerText = "Zaten destek oldunuz ❤️";
+    }
+}
 
-    <h1 id="sayi">0</h1>
-    <button id="btn" onclick="arttir()">Destek Ol ❤️</button>
-    <p id="mesaj"></p>
+function arttir() {
+    if (localStorage.getItem("tiklandi") === "evet") {
+        return;
+    }
 
-    <script>
-        const API_URL = "https://api.counterapi.dev/v1/kedyofficial101-coder/desteksayaci";
+    let sayi = localStorage.getItem("destekSayi");
 
-        async function yukle() {
-            try {
-                let res = await fetch(API_URL);
-                let data = await res.json();
-                document.getElementById("sayi").innerText = data.value || 0;
-            } catch (e) {
-                document.getElementById("sayi").innerText = "0";
-            }
+    if (sayi === null) {
+        sayi = 0;
+    }
 
-            if (localStorage.getItem("tiklandi") === "evet") {
-                document.getElementById("btn").disabled = true;
-                document.getElementById("mesaj").innerText =
-                    "Zaten destek oldunuz ❤️";
-            }
-        }
+    sayi = Number(sayi) + 1;
 
-        async function arttir() {
-            if (localStorage.getItem("tiklandi") === "evet") {
-                return;
-            }
+    localStorage.setItem("destekSayi", sayi);
+    localStorage.setItem("tiklandi", "evet");
 
-            try {
-                let res = await fetch(API_URL + "/up", {
-                    method: "POST"
-                });
+    document.getElementById("sayi").innerText = sayi;
+    document.getElementById("btn").disabled = true;
+    document.getElementById("mesaj").innerText = "Teşekkürler ❤️";
+}
 
-                let data = await res.json();
-
-                document.getElementById("sayi").innerText = data.value;
-
-                localStorage.setItem("tiklandi", "evet");
-
-                document.getElementById("btn").disabled = true;
-                document.getElementById("mesaj").innerText =
-                    "Teşekkürler ❤️";
-            } catch (e) {
-                document.getElementById("mesaj").innerText =
-                    "Hata oluştu";
-            }
-        }
-
-        yukle();
-    </script>
-
-</body>
-</html>
+window.onload = yukle;
+</script>

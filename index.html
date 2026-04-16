@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destek Sayacı</title>
+<style>
+body{
+  text-align:center;
+  font-family:Arial;
+  padding:40px;
+}
+button{
+  font-size:20px;
+  padding:10px 20px;
+}
+</style>
+</head>
+<body>
+
+<h1 id="sayi">0</h1>
+<button id="btn" onclick="arttir()">Destek OL!</button>
+<p id="mesaj"></p>
+
+<script>
+function yukle() {
+  let sayi = localStorage.getItem("destekSayi") || 0;
+  document.getElementById("sayi").innerText = sayi;
+
+  if(localStorage.getItem("tiklandi") === "evet"){
+    document.getElementById("btn").disabled = true;
+    document.getElementById("mesaj").innerText =
+      "Zaten destek oldunuz ❤️";
+  }
+}
+
+function arttir() {
+  if(localStorage.getItem("tiklandi") === "evet"){
+    return;
+  }
+
+  let sayi = Number(localStorage.getItem("destekSayi") || 0);
+  sayi++;
+
+  localStorage.setItem("destekSayi", sayi);
+  localStorage.setItem("tiklandi", "evet");
+
+  document.getElementById("sayi").innerText = sayi;
+  document.getElementById("btn").disabled = true;
+  document.getElementById("mesaj").innerText =
+    "Teşekkürler ❤️";
+}
+
+yukle();
+</script>
+
+</body>
+</html>
